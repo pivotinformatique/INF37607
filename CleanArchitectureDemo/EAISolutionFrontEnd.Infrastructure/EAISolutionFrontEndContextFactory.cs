@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace EAISolutionFrontEnd.Infrastructure
 {
-    internal class EAISolutionFrontEndContextFactory
+    internal class EAISolutionFrontEndContextFactory : IDesignTimeDbContextFactory<EAISolutionFrontEndContext>
     {
+        public EAISolutionFrontEndContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<EAISolutionFrontEndContext>();
+            optionsBuilder.UseSqlServer(@"Server=.;Database=EAISolutionFrontEndDB;Trusted_Connection=True;");
+            return new EAISolutionFrontEndContext(optionsBuilder.Options);
+        }
     }
 }
