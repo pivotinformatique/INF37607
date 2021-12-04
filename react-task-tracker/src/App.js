@@ -5,7 +5,7 @@ import Header from './Components/Header'
   const x = true
   return (
     <div className="container">
-      <Header title={1}></Header>
+      <Header></Header>
     </div>
 
   );
