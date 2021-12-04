@@ -23,10 +23,15 @@ import Tasks from './Components/Tasks'
         reminder: false,
     }
 ])
+
+//Delete Trask
+const deleteTask = (id) => {
+  console.log('delete',id)
+}
   return (
     <div className="container">
       <Header/>
-      <Tasks tasks={tasks}/>
+      <Tasks tasks={tasks} onDelete={deleteTask}/>
     </div>
 
   );
