@@ -1,11 +1,11 @@
 import Header from './Components/Header'
+import Tasks from './Components/Tasks'
 
  const App = () => {
-  const name = 'Brad'
-  const x = true
   return (
     <div className="container">
-      <Header></Header>
+      <Header/>
+      <Tasks/>
     </div>
 
   );
