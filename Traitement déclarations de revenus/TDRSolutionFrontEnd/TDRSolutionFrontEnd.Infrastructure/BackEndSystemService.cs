@@ -7,14 +7,14 @@ namespace TDRSolutionFrontEnd.Infrastructure
 {
     public class BackEndSystemService : IBackEndSystemService
     {
-        public async Task sendDemandeTraitementToBackEnd(DeclarationRevenus declarationRevenus, string directory)
+        public async Task sendDemandeTraitementToBackEnd(DemandeTraitement demandeTraitement, string directory)
         {
             XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
-            namespaces.Add("ns0", "http://TDRSolution.DeclarationRevenus");
+            namespaces.Add("ns0", "http://TDRSchemas.Schemas.DemandeTraitement");
 
-            string xml = XmlTranfromHelper.Serialize(declarationRevenus, namespaces);
+            string xml = XmlTranfromHelper.Serialize(demandeTraitement, namespaces);
 
-            await File.WriteAllTextAsync(directory + "Request" + DateTime.Now.Ticks + ".xml", xml);
+            await File.WriteAllTextAsync(directory + "Declaration" + DateTime.Now.Ticks + ".xml", xml);
 
         }
     }

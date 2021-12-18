@@ -8,7 +8,7 @@ namespace TDRSolutionFrontEnd.Core.Services
 {
     public class DeclarationRevenuService : IDeclarationRevenuService
     {
-        private readonly IDeclarationRevenuRepository _DeclarationRevenuRepository ;
+        private readonly IDeclarationRevenuRepository _DeclarationRevenuRepository;
         private readonly IUserRepository? _UserRepository;
         private readonly IBackEndSystemService? _IBackEndSystemService;
 
@@ -24,9 +24,12 @@ namespace TDRSolutionFrontEnd.Core.Services
             return await _DeclarationRevenuRepository.GetByIdAsync(id);
         }
 
-        public async Task<DeclarationRevenus> AddDeclarationRevenu(DeclarationRevenus declarationRevenus)
+        public async Task<DeclarationRevenus> AddDeclarationRevenu(int userId, DeclarationRevenus declarationRevenus)
         {
-            return await _DeclarationRevenuRepository.AddAsync(declarationRevenus);
+                Usager user = await _UserRepository.GetByIdAsync(userId);
+                if (user != null) { user.AddDeclarationRevenus(declarationRevenus); }
+                await _DeclarationRevenuRepository.AddAsync(declarationRevenus);
+                return await _DeclarationRevenuRepository.GetByIdAsync(declarationRevenus.Id);
         }
 
         public async Task UpdateDeclarationRevenus(DeclarationRevenus declarationRevenus)
@@ -39,16 +42,31 @@ namespace TDRSolutionFrontEnd.Core.Services
             await _DeclarationRevenuRepository.DeleteAsync(declarationRevenus);
         }
 
-        public Task<IReadOnlyList<DeclarationRevenus>> GetUserDeclarationRevenus(int userId)
+        public async Task<IReadOnlyList<DeclarationRevenus>> GetUserDeclarationRevenus(int userId)
         {
-            throw new NotImplementedException();
+            DeclarationsByUser spec = new DeclarationsByUser(userId);
+            IReadOnlyList<DeclarationRevenus> declarationRevenus = await _DeclarationRevenuRepository.ListAsync(spec);
+            List<DeclarationRevenus> declarationRevenusToReturn = new List<DeclarationRevenus>();
+            foreach (DeclarationRevenus declarationRevenu in declarationRevenus)
+                declarationRevenusToReturn.Add(await _DeclarationRevenuRepository.GetByIdWithAvisCotisationAsync(declarationRevenu.Id));
+            declarationRevenusToReturn = declarationRevenusToReturn.OrderBy(x => x.Annee).ToList<DeclarationRevenus>();
+            return (IReadOnlyList<DeclarationRevenus>)declarationRevenusToReturn;
         }
 
-        public Task<DeclarationRevenus> SubmitDeclarationRevenus(DeclarationRevenus declarationRevenus, string directory)
+        public async Task<DeclarationRevenus> SubmitDeclarationRevenus(DemandeTraitement demandeTraitement, string directory)
         {
-            throw new NotImplementedException();
+
+            await _IBackEndSystemService.sendDemandeTraitementToBackEnd(demandeTraitement, directory);
+            var declaration = await GetDeclarationRevenu(Convert.ToInt32(demandeTraitement.declarationRevenus.IdDeclaration));
+            declaration.IsSubmitted = true;
+            await UpdateDeclarationRevenus(declaration);
+            return await _DeclarationRevenuRepository.GetByIdWithAvisCotisationAsync(declaration.Id);
         }
 
-
+        public async Task<AvisCotisation?> GetDeclarationAvisCotisation(int declarationId)
+        {
+            var declarationWithAvis = await _DeclarationRevenuRepository.GetByIdWithAvisCotisationAsync(declarationId);
+            return declarationWithAvis?.AvisCotisation;
+        }
     }
 }

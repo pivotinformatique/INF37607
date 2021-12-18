@@ -24,11 +24,11 @@ namespace TDRSolutionFrontEnd.TestsUnitaires.Core.Entities
         {
             // Première étape: configurer les mocks pour qu’ils retournent les bons objets
 
-            Contribuable user = new Contribuable { Id = 1 };
+            Usager usager = new Usager { Id = 1 };
             _mockUserRepository.Setup(x =>
-                  x.GetByIdAsync(user.Id)).ReturnsAsync(user);
+                  x.GetByIdAsync(usager.Id)).ReturnsAsync(usager);
             DeclarationRevenus declarationRevenus = new DeclarationRevenus { Id = 1 };
-            declarationRevenus.Contribuable = user;
+            declarationRevenus.Usager = usager;
             _mockDeclarationRevenuRepository.Setup(x => x.GetByIdAsync(declarationRevenus.Id)).ReturnsAsync(declarationRevenus);
 
 
@@ -36,7 +36,7 @@ namespace TDRSolutionFrontEnd.TestsUnitaires.Core.Entities
             //Deuxième étape: appeler le service
 
             DeclarationRevenuService service = new DeclarationRevenuService(_mockDeclarationRevenuRepository.Object, null, null);
-            await service.AddDeclarationRevenu(declarationRevenus);
+            await service.AddDeclarationRevenu(usager.Id,declarationRevenus);
 
             //Troisième étape: vérifier les appels aux repositories:
 
@@ -45,7 +45,7 @@ namespace TDRSolutionFrontEnd.TestsUnitaires.Core.Entities
 
             //Quatrième étape: vérifier la valeur finale
 
-            Assert.Equal(1, declarationRevenus.Contribuable.Id);
+            Assert.Equal(1, declarationRevenus.Usager.Id);
         }
 
     }

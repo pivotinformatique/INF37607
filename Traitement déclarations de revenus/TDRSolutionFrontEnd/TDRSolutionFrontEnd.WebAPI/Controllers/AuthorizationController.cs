@@ -10,8 +10,6 @@ using System.Text;
 using AutoMapper;
 using TDRSolutionFrontEnd.Core.Entities;
 using TDRSolutionFrontEnd.Core.Interfaces;
-using TDRSolutionFrontEnd.Infrastructure;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TDRSolutionFrontEnd.WebAPI.DTOs;
 
@@ -59,7 +57,7 @@ namespace TDRSolutionFrontEnd.WebAPI.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.NomUsager)
+                new Claim(ClaimTypes.Name, user.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));

@@ -3,6 +3,6 @@ namespace TDRSolutionFrontEnd.Core.Interfaces
 {
     public interface IBackEndSystemService
     {
-        Task sendDemandeTraitementToBackEnd(DeclarationRevenus declarationRevenus, string directory);
+        Task sendDemandeTraitementToBackEnd(DemandeTraitement demandeTraitement, string directory);
     }
 }

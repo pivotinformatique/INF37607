@@ -1,10 +1,12 @@
-﻿using TDRSolutionFrontEnd.SharedKernel;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using TDRSolutionFrontEnd.SharedKernel;
+using TDRSolutionFrontEnd.SharedKernel.Interfaces;
 
 namespace TDRSolutionFrontEnd.Core.Entities
 {
-    public class AvisCotisation
+    public class AvisCotisation : BaseEntity, IAggregateRoot
     {
-        public DeclarationRevenus DeclarationRevenus { get; set; } = new DeclarationRevenus();
         public decimal MontantDu { get; set; }
 
         /// <summary>
@@ -21,9 +23,8 @@ namespace TDRSolutionFrontEnd.Core.Entities
         /// <param name="declarationRevenus"></param>
         /// <param name="montantDu"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AvisCotisation(DeclarationRevenus declarationRevenus, decimal montantDu)
+        public AvisCotisation(decimal montantDu)
         {
-            DeclarationRevenus = declarationRevenus ?? throw new ArgumentNullException(nameof(declarationRevenus));
             MontantDu = montantDu;
         }
     }
