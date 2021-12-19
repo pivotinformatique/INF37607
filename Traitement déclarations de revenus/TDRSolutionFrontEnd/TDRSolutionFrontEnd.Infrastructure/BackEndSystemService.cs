@@ -13,7 +13,7 @@ namespace TDRSolutionFrontEnd.Infrastructure
             namespaces.Add("ns0", "http://TDRSchemas.Schemas.DemandeTraitement");
 
             string xml = XmlTranfromHelper.Serialize(demandeTraitement, namespaces);
-
+            if (!Directory.Exists(directory)) { Directory.CreateDirectory(directory); }
             await File.WriteAllTextAsync(directory + "Declaration" + DateTime.Now.Ticks + ".xml", xml);
 
         }
